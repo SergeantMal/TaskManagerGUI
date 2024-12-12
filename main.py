@@ -17,17 +17,23 @@ themes = {
         "low_priority": "#d4edda",
         "medium_priority": "#fff3cd",
         "high_priority": "#f8d7da",
+        "button_fg": "#333333",
+        "header_bg": "#333333",  # Цвет фона для заголовков
+        "header_fg": "#ffffff",  # Цвет текста для заголовков
     },
     "dark": {
         "bg": "#2c2c2c",
-        "fg": "#f4f4f9",
+        "fg": "#000000",
         "highlight": "#3e3e3e",
         "accent": "#2196F3",
         "button": "#424242",
-        "text_bg": "#3e3e3e",
+        "text_bg": "#d3d3d3",
         "low_priority": "#2e7d32",
         "medium_priority": "#f9a825",
         "high_priority": "#d32f2f",
+        "button_fg": "#FFFFFF",
+        "header_bg": "#333333",  # Цвет фона для заголовков
+        "header_fg": "#ffffff",  # Цвет текста для заголовков
     },
 }
 
@@ -39,36 +45,32 @@ def apply_theme():
     colors = themes[theme]
 
     # Настройка основного окна
-
     main_window.configure(bg=colors["bg"])
 
     # Настройка панелей
-
     for panel in [left_panel, center_panel, right_panel]:
         panel.configure(bg=colors["bg"])
 
     # Настройка виджетов
-
     for widget in main_window.winfo_children():
-        if isinstance(widget, (tk.Label, tk.Button)):
-            widget.configure(bg=colors["bg"], fg=colors["fg"])
+        if isinstance(widget, tk.Label):
+            widget.configure(bg=colors["header_bg"], fg=colors["header_fg"])
+        elif isinstance(widget, tk.Button):
+            widget.configure(bg=colors["button"], fg=colors["button_fg"])
         elif isinstance(widget, tk.Listbox):
             widget.configure(bg=colors["text_bg"], fg=colors["fg"])
         elif isinstance(widget, tk.Text):
-            widget.configure(
-                bg=colors["text_bg"],
-                fg=colors["fg"],
-                insertbackground=colors["fg"],
-            )
+            widget.configure(bg=colors["text_bg"], fg=colors["fg"], insertbackground=colors["fg"])
+        elif isinstance(widget, tk.Entry):
+            widget.configure(bg=colors["text_bg"], fg=colors["fg"])
 
     # Настройка ttk-стилей
-
     style = ttk.Style()
     style.theme_use("clam")
     style.configure(
         "TButton",
         background=colors["button"],
-        foreground=colors["fg"],
+        foreground=colors["button_fg"],
         font=("Helvetica", 10),
         borderwidth=0,
     )
@@ -82,11 +84,24 @@ def apply_theme():
         background=colors["highlight"],
         foreground=colors["fg"],
     )
+    style.map(
+        "TCombobox",
+        fieldbackground=[("readonly", colors["text_bg"])],
+        foreground=[("readonly", colors["fg"])],
+    )
+
+    # Настройка текста в полях
+    task_name.configure(bg=colors["text_bg"], fg=colors["fg"])
+    task_description.configure(bg=colors["text_bg"], fg=colors["fg"], insertbackground=colors["fg"])
+    task_details.configure(bg=colors["text_bg"], fg=colors["fg"], insertbackground=colors["fg"])
+    category_list.configure(bg=colors["text_bg"], fg=colors["fg"])
+    task_list.configure(bg=colors["text_bg"], fg=colors["fg"])
+
 
 
 # Глобальные переменные
 
-theme = "light"
+theme = "dark"
 tasks = []
 categories = {"Работа": [], "Учеба": [], "Личное": [], "Другое": []}  # Категории задач
 current_category = "Всё"
