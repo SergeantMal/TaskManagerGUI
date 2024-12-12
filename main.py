@@ -18,8 +18,8 @@ themes = {
         "medium_priority": "#fff3cd",
         "high_priority": "#f8d7da",
         "button_fg": "#333333",
-        "header_bg": "#333333",  # Цвет фона для заголовков
-        "header_fg": "#ffffff",  # Цвет текста для заголовков
+        "header_bg": "#f4f4f9",  # Цвет фона для заголовков
+        "header_fg": "#333333",  # Цвет текста для заголовков
     },
     "dark": {
         "bg": "#2c2c2c",
@@ -32,7 +32,7 @@ themes = {
         "medium_priority": "#f9a825",
         "high_priority": "#d32f2f",
         "button_fg": "#FFFFFF",
-        "header_bg": "#333333",  # Цвет фона для заголовков
+        "header_bg": "#2c2c2c",  # Цвет фона для заголовков
         "header_fg": "#ffffff",  # Цвет текста для заголовков
     },
 }
@@ -51,11 +51,9 @@ def apply_theme():
     for panel in [left_panel, center_panel, right_panel]:
         panel.configure(bg=colors["bg"])
 
-    # Настройка виджетов
+    # Настройка стандартных виджетов
     for widget in main_window.winfo_children():
-        if isinstance(widget, tk.Label):
-            widget.configure(bg=colors["header_bg"], fg=colors["header_fg"])
-        elif isinstance(widget, tk.Button):
+        if isinstance(widget, tk.Button):
             widget.configure(bg=colors["button"], fg=colors["button_fg"])
         elif isinstance(widget, tk.Listbox):
             widget.configure(bg=colors["text_bg"], fg=colors["fg"])
@@ -67,6 +65,16 @@ def apply_theme():
     # Настройка ttk-стилей
     style = ttk.Style()
     style.theme_use("clam")
+
+    # Настройка стиля для ttk.Label
+    style.configure(
+        "TLabel",
+        background=colors["header_bg"],
+        foreground=colors["header_fg"],
+        font=("Helvetica", 10)
+    )
+
+    # Настройка стиля для ttk.Button
     style.configure(
         "TButton",
         background=colors["button"],
@@ -78,6 +86,9 @@ def apply_theme():
         "TButton",
         background=[("active", colors["accent"]), ("pressed", colors["highlight"])],
     )
+
+    # Настройка стиля для ttk.Combobox
+
     style.configure(
         "TCombobox",
         fieldbackground=colors["text_bg"],
@@ -97,6 +108,7 @@ def apply_theme():
     category_list.configure(bg=colors["text_bg"], fg=colors["fg"])
     task_list.configure(bg=colors["text_bg"], fg=colors["fg"])
 
+    # Настройка
 
 
 # Глобальные переменные
@@ -374,7 +386,7 @@ right_panel.pack(side=tk.RIGHT, fill=tk.Y, padx=10, pady=10)
 
 # Левый блок (категории)
 
-tk.Label(left_panel, text="Категории:", font=("Helvetica", 12, "bold")).pack(pady=10)
+ttk.Label(left_panel, text="Категории:", font=("Helvetica", 12, "bold")).pack(pady=10)
 category_list = tk.Listbox(left_panel, height=15)
 category_list.pack(fill=tk.BOTH, expand=True)
 category_list.bind("<<ListboxSelect>>", category_selected)
@@ -382,7 +394,7 @@ refresh_categories()
 
 # Центральный блок (список задач)
 
-tk.Label(center_panel, text="Список задач:", font=("Helvetica", 12, "bold")).grid(
+ttk.Label(center_panel, text="Список задач:", font=("Helvetica", 12, "bold")).grid(
     row=0, column=0, columnspan=2, pady=10, sticky="n"
 )
 
@@ -392,7 +404,7 @@ task_list.bind("<<ListboxSelect>>", show_task_details)
 
 # Название задачи и поле ввода
 
-tk.Label(center_panel, text="Название задачи:", anchor="w").grid(
+ttk.Label(center_panel, text="Название задачи:", anchor="w").grid(
     row=2, column=0, padx=(10, 5), pady=5, sticky="w"
 )
 task_name = tk.Entry(center_panel, width=50)
@@ -400,7 +412,7 @@ task_name.grid(row=2, column=1, padx=(5, 10), pady=5, sticky="w")
 
 # Описание задачи и поле ввода
 
-tk.Label(center_panel, text="Описание задачи:", anchor="w").grid(
+ttk.Label(center_panel, text="Описание задачи:", anchor="w").grid(
     row=3, column=0, padx=(10, 5), pady=5, sticky="w"
 )
 task_description = tk.Text(center_panel, height=4, width=50)
@@ -408,7 +420,7 @@ task_description.grid(row=3, column=1, padx=(5, 10), pady=5, sticky="w")
 
 # Приоритет
 
-tk.Label(center_panel, text="Приоритет:", anchor="w").grid(
+ttk.Label(center_panel, text="Приоритет:", anchor="w").grid(
     row=4, column=0, padx=(10, 5), pady=5, sticky="w"
 )
 task_priority = ttk.Combobox(
@@ -418,7 +430,7 @@ task_priority.grid(row=4, column=1, padx=(5, 10), pady=5, sticky="w")
 
 # Категория
 
-tk.Label(center_panel, text="Категория:", anchor="w").grid(
+ttk.Label(center_panel, text="Категория:", anchor="w").grid(
     row=5, column=0, padx=(10, 5), pady=5, sticky="w"
 )
 task_category = ttk.Combobox(center_panel, values=list(categories.keys()), width=48)
@@ -460,7 +472,7 @@ right_panel.grid_columnconfigure(0, weight=1)
 
 # Заголовок "Детали задачи"
 
-tk.Label(right_panel, text="Детали задачи:", font=("Helvetica", 12, "bold")).grid(
+ttk.Label(right_panel, text="Детали задачи:", font=("Helvetica", 12, "bold")).grid(
     row=0, column=0, padx=10, pady=10, sticky="n"
 )
 
@@ -490,7 +502,7 @@ settings_menu.add_command(label="Темная тема", command=lambda: change_
 help_menu = tk.Menu(menu_bar, tearoff=0)
 help_menu.add_command(
     label="О программе",
-    command=lambda: messagebox.showinfo("О программе", "TaskManager 'Malamute'"),
+    command=lambda: messagebox.showinfo("О программе", "TaskManager 'Malamute' v1.1"),
 )
 
 menu_bar.add_cascade(label="Файл", menu=file_menu)
