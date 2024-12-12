@@ -45,13 +45,16 @@ def apply_theme():
     colors = themes[theme]
 
     # Настройка основного окна
+
     main_window.configure(bg=colors["bg"])
 
     # Настройка панелей
+
     for panel in [left_panel, center_panel, right_panel]:
         panel.configure(bg=colors["bg"])
 
     # Настройка стандартных виджетов
+
     for widget in main_window.winfo_children():
         if isinstance(widget, tk.Button):
             widget.configure(bg=colors["button"], fg=colors["button_fg"])
@@ -63,10 +66,12 @@ def apply_theme():
             widget.configure(bg=colors["text_bg"], fg=colors["fg"])
 
     # Настройка ttk-стилей
+
     style = ttk.Style()
     style.theme_use("clam")
 
     # Настройка стиля для ttk.Label
+
     style.configure(
         "TLabel",
         background=colors["header_bg"],
@@ -75,6 +80,7 @@ def apply_theme():
     )
 
     # Настройка стиля для ttk.Button
+
     style.configure(
         "TButton",
         background=colors["button"],
@@ -102,6 +108,7 @@ def apply_theme():
     )
 
     # Настройка текста в полях
+
     task_name.configure(bg=colors["text_bg"], fg=colors["fg"])
     task_description.configure(bg=colors["text_bg"], fg=colors["fg"], insertbackground=colors["fg"])
     task_details.configure(bg=colors["text_bg"], fg=colors["fg"], insertbackground=colors["fg"])
@@ -303,9 +310,7 @@ def show_task_details(event):
     # Добавляем строку "Приоритет" с соответствующим цветом
 
     task_details.insert(tk.END, "Приоритет: ", "bold")
-    priority_color = {"Высокий": "red", "Средний": "yellow", "Низкий": "green"}.get(
-        task["priority"], "black"
-    )
+
     task_details.insert(
         tk.END, f"{task['priority']}\n", task["priority"]
     )  # Применяем тег по имени приоритета
@@ -352,6 +357,7 @@ sort_direction = {
 }  # True - по возрастанию, False - по убыванию
 
 # Функция сортировки
+
 
 def sort_tasks(by):
     global sort_direction
