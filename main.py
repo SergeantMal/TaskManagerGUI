@@ -1,8 +1,9 @@
-# Программа TaskManager с использованием tkinker
+# Программа TaskManager с использованием tkinter
 
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import csv
+
 
 # Цветовые схемы
 
